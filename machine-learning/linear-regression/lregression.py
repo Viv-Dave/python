@@ -39,7 +39,6 @@ def gradient_descent(iterations, l_rate, x_array, y_array):
         param_2 -= l_rate * gradient_param2
 
     return param_1, param_2
-
 # Parameters for gradient descent
 learning_rate = 0.0001
 n_iterations = 1000
@@ -58,3 +57,8 @@ plt.ylabel("Y-axis")
 plt.title("Linear Regression using Gradient Descent")
 plt.legend()
 plt.show()
+
+transpose_X = np.transpose(x_array)
+inverse = np.linalg.inv(np.matmul(transpose_X, x_array))
+parameter = np.matmul(inverse, transpose_X)*y_array
+print(parameter)

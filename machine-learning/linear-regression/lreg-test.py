@@ -1,8 +1,10 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 
-test_df = pd.read_csv("../machine-learning/temp-dataset/test.csv", names=["x", "y"])
+
+# Update the file path to an absolute path
+test_df = pd.read_csv("C:/Users/vivek/OneDrive/desktop/python/machine-learning/linear-regression/temp-dataset/test.csv", names=["x", "y"])
 df = pd.DataFrame(test_df)
 
 df["x"] = pd.to_numeric(df["x"], errors="coerce")
@@ -26,3 +28,9 @@ param_1 = 0.011937938999784087
 param_2 = 0.9988705055011785
 mse_test = mean_squared_error(param_1, param_2, x_array, y_array)
 print(f"Mean Squared Error/Cost Function : {mse_test}")
+# transpose_X = np.transpose(df[["x"]])
+# inverse = np.multiply(transpose_X, df[["x"]])
+# inverse = np.linalg.inv(inverse)
+# print(np.size(inverse))
+# new_parameter = np.multiply(inverse, transpose_X)*df[["y"]]
+# print(new_parameter)
