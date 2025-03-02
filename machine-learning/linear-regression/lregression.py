@@ -2,11 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load data
 reviews = pd.read_csv("../machine-learning/temp-dataset/temptrain.csv", names=["x", "y"])
 df = pd.DataFrame(reviews)
 
-# Convert to numeric, checking for NaNs
 df["x"] = pd.to_numeric(df["x"], errors="coerce")
 df["y"] = pd.to_numeric(df["y"], errors="coerce")
 
@@ -16,7 +14,7 @@ y_array = df["y"].to_numpy()
 # Hypothesis function
 def hypothesis(param_1, param_2, input_value):
     return param_1 + param_2 * input_value
-
+#Calculating the cost function
 def mean_squared_error(param_1, param_2, x_array, y_array):
     m = len(y_array)
     predictions = hypothesis(param_1, param_2, x_array)
@@ -39,7 +37,7 @@ def gradient_descent(iterations, l_rate, x_array, y_array):
         param_2 -= l_rate * gradient_param2
 
     return param_1, param_2
-# Parameters for gradient descent
+# Parameters for gradient descent   
 learning_rate = 0.0001
 n_iterations = 1000
 

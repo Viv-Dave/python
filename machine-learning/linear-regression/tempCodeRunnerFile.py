@@ -1,1 +1,1 @@
-for i in range(len(df[col])):
+params = gradient_descent(X, y, params, learning_rate, n_iterations)
