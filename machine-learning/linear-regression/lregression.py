@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-reviews = pd.read_csv("../machine-learning/temp-dataset/temptrain.csv", names=["x", "y"])
+reviews = pd.read_csv("../linear-regression/temp-dataset/temptrain.csv", names=["x", "y"])
 df = pd.DataFrame(reviews)
 
 df["x"] = pd.to_numeric(df["x"], errors="coerce")
@@ -60,3 +60,9 @@ transpose_X = np.transpose(x_array)
 inverse = np.linalg.inv(np.matmul(transpose_X, x_array))
 parameter = np.matmul(inverse, transpose_X)*y_array
 print(parameter)
+# from sklearn import linear_model
+# reg = linear_model.LinearRegression()
+# reg.fit(x_array.T, y_array.T)
+# theta_1 = reg.coef_[0]
+# theta_0 = reg.intercept_
+# print(f"Params: {theta_0}, {theta_1}")

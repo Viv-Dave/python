@@ -8,35 +8,33 @@ y["output_conditional"] = np.where(y['diagnosis'] == "B", 0,1)
 y = y["output_conditional"].values 
 X.insert(0, 'bias', 1)
 X = X.values
-params = np.zeros(X.shape[1])
-def hypothesis(params, X):
-    return np.dot(X, params)
-def sigmoid(z):
-    sigmoid = 1/(1+np.exp(z))
-    return sigmoid
-def mean_squared_error():
-    return None
-def gradient_ascent(y,iterations, X, learning_rate, params):
-    m = len(y)
-    for _ in range(iterations):
-        predictions = sigmoid(np.dot(X, params))
-        errors = predictions - y
+# params = np.zeros(X.shape[1])
+# def hypothesis(params, X):
+#     return np.dot(X, params)
+# def sigmoid(z):
+#     sigmoid = 1/(1+np.exp(z))
+#     return sigmoid
+# def mean_squared_error():
+#     return None
+# def gradient_ascent(y,iterations, X, learning_rate, params):
+#     m = len(y)
+#     for _ in range(iterations):
+#         predictions = sigmoid(np.dot(X, params))
+#         errors = predictions - y
 
-        gradients = (1/m)*np.dot(X.T, errors)
-        params += learning_rate*gradients
+#         gradients = (1/m)*np.dot(X.T, errors)
+#         params -= learning_rate*gradients
 
-    return params
-learning_rate = 0.01
-iterations = 2000
-updated_params = gradient_ascent(y,iterations,X, learning_rate, params)
-print(updated_params)
+#     return params
+# learning_rate = 0.01
+# iterations = 2000
+# updated_params = gradient_ascent(y,iterations,X, learning_rate, params)
+# print(updated_params)
 
-
-
-
-
-
-
+from sklearn import linear_model
+model = linear_model.LogisticRegression(solver='saga', max_iter=5000)
+model.fit(X, y)
+print(model.coef_)
 
 
 
