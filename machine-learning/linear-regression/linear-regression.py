@@ -1,7 +1,8 @@
-import numpy as np
+import numpy as np 
 import pandas as pd
 from sklearn.feature_selection import mutual_info_regression, SelectKBest
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import r2_score, mean_absolute_error
 
 class LinearRegressionGD:
     def __init__(self, learning_rate=0.01, epochs=1000):
@@ -19,12 +20,18 @@ class LinearRegressionGD:
         mse = np.sum(squared_errors) / n
         return mse
 
+    def calculate_accuracy(self, y_actual, y_predicted, tolerance=0.1):
+        # Accuracy as percentage of predictions within ±10% tolerance
+        correct_predictions = np.abs((y_actual - y_predicted) / y_actual) <= tolerance
+        accuracy = np.mean(correct_predictions) * 100
+        return accuracy
+
     def train_linear_regression(self, X_train, y_train):
         m, p = X_train.shape  # Corrected: Use X_train.shape
         self.w = np.zeros((1, p))
         self.b = 0
         previous_mse = float('inf')
-        learning_rate = self.learning_rate # Initialize learning_rate here, outside the conditional block
+        learning_rate = self.learning_rate
 
         for epoch in range(self.epochs):
             y_predicted = self.predict(X_train)
@@ -32,25 +39,25 @@ class LinearRegressionGD:
             dw = (-2 / m) * np.dot(X_train.T, errors)
             db = (-2 / m) * np.sum(errors)
 
-            self.w = self.w - learning_rate * dw.T # Use learning_rate (which is now properly scoped)
+            self.w = self.w - learning_rate * dw.T
             self.b = self.b - learning_rate * db
 
             if epoch % 10 == 0:
                 mse = self.calculate_mse(y_train, y_predicted)
                 print(f"Epoch {epoch}, MSE: {mse}, w: {self.w}, b: {self.b}, LR: {learning_rate}")
 
-                # Adaptive Learning Rate Logic:
-                if mse >= previous_mse:
-                    learning_rate *= 0.5 # Reduce learning rate
-                    print(f"Learning rate reduced to: {learning_rate}")
+                # # Adaptive Learning Rate Logic:
+                # if mse >= previous_mse:
+                #     learning_rate *= 0.5
+                #     print(f"Learning rate reduced to: {learning_rate}")
 
-                previous_mse = mse
-                if learning_rate < 1e-9:
-                    print("Learning rate too small, stopping training.")
-                    break
-        self.learning_rate = learning_rate
+                # previous_mse = mse
+                # if learning_rate < 1e-9:
+                #     print("Learning rate too small, stopping training.")
+        #         #     break
+        # self.learning_rate = learning_rate
 
-    def fit(self, X_train, y_train):  # Public fit method
+    def fit(self, X_train, y_train):
         self.train_linear_regression(X_train, y_train)
 
 
@@ -69,6 +76,18 @@ if __name__ == '__main__':
 
     print("Selected feature indices:", selector.get_support(indices=True))
 
-    model = LinearRegressionGD(learning_rate=0.01, epochs=1000) # Keep initial learning rate at 0.01, adaptive will adjust it
+    model = LinearRegressionGD(learning_rate=0.2, epochs=1000)
     model.fit(X_new, y)
-    print(f"Model MSE: {model.calculate_mse(y, model.predict(X_new))}")
+
+    y_pred = model.predict(X_new)
+    mse = model.calculate_mse(y, y_pred)
+    print(f"Model MSE: {mse:.2f}")
+
+    # Additional Performance Metrics
+    r2 = r2_score(y, y_pred)
+    mae = mean_absolute_error(y, y_pred)
+    accuracy = model.calculate_accuracy(y, y_pred)
+
+    print(f"R² Score: {r2:.2f}")
+    print(f"Mean Absolute Error (MAE): {mae:.2f}")
+    print(f"Percentage Accuracy (within ±10% tolerance): {accuracy:.2f}%")
