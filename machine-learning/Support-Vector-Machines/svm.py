@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -60,7 +61,7 @@ def process(image_path, size=(64, 64)):
     flattened = numpy_image.flatten().reshape(1, -1)  
     return flattened
 
-test_image = process(r"D:\python\machine-learning\Support-Vector-Machines\datasets\dataset\test\circle\circle-2000.jpg")
+test_image = process(r"D:\python\machine-learning\Support-Vector-Machines\datasets\dataset\test\circle\circle-2024.jpg")
 test_image_2 = process(r"D:\python\machine-learning\Support-Vector-Machines\datasets\square\square-2.jpg")
 test_image_pca = pca.transform(test_image)
 test_image_2_pca =pca.transform(test_image_2)
@@ -70,3 +71,14 @@ shape = "Circle" if prediction == 0 else "Square"
 shape_2 = "Circle" if prediction_2 == 0 else "Square"
 logging.info(f"Predicted Shape: {shape}")
 logging.info(f"Predicted Shape for another test image: {shape_2}")
+
+plt.figure(figsize=(8, 6))
+plt.scatter(X_train_pca[:, 0], X_train_pca[:, 1], c=y_train, cmap="coolwarm", alpha=0.7, edgecolors="k")
+
+# Labels and title
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("PCA Projection of Training Data")
+plt.colorbar(label="Shape (0 = Circle, 1 = Square)")
+
+plt.show()
