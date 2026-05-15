@@ -1,25 +1,41 @@
-import numpy as np
-import pandas as pd
+name = "Jessie"
+import string
+import unicodedata
+import torch
+# We can use "_" to represent an out-of-vocabulary character, that is, any character we are not handling in our model
+allowed_characters = string.ascii_letters + " .,;'" + "_"
+n_letters = len(allowed_characters)
 
-def sigmoid(z):
-    sigmoid = 1/(1+np.exp(z))
-    return sigmoid
-def predict(X, params, threshold=0.5):
-    probabilities = sigmoid(np.dot(X, params))  
-    return (probabilities >= threshold).astype(int)
- 
-fields = ["radius_mean","texture_mean","perimeter_mean","area_mean","concavity_mean", "radius_worst", "perimeter_worst","area_worst", "concavity_worst","texture_worst"]
-X = pd.read_csv("../logistic-regression/dataset/data.csv", usecols=fields)
-y = pd.read_csv("../logistic-regression/dataset/data.csv", usecols=["diagnosis"])
-y_test = np.where(y['diagnosis'] == "B", 0, 1)
-X.insert(0, 'bias', 1)
-positive_params = np.array([ 0.5006545,    3.85060401,   3.36126413,  21.40255745,   7.4405349,
-   -0.1100135,    4.07821012,   3.97949385,  20.81689013, -11.62038037,
-   -0.25208665])
-sk_params =np.array([ 2.42322838e-05, -2.66832858e-02,  6.31180574e-02,  9.09831699e-02,
-  -2.37447981e-02 , 1.36857865e-02, -8.68346212e-03,  1.60090539e-01,
-   1.40162243e-01,  1.64379850e-02,  3.35380950e-02])
-X_test = X.values 
-y_pred = predict(X_test, sk_params)
-accuracy = np.mean(y_pred == y_test) * 100
-print(f"\n \n \n Test Accuracy for Bening or Malignant: {accuracy:.2f}%")
+# Turn a Unicode string to plain ASCII, thanks to https://stackoverflow.com/a/518232/2809427
+def unicodeToAscii(s):
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', s)
+        if unicodedata.category(c) != 'Mn'
+        and c in allowed_characters
+    )
+def letterToIndex(letter):
+    # return our out-of-vocabulary character if we encounter a letter unknown to our model
+    if letter not in allowed_characters:
+        return allowed_characters.find("_")
+    else:
+        return allowed_characters.find(letter)
+
+# Turn a line into a <line_length x 1 x n_letters>,
+# or an array of one-hot letter vectors
+def lineToTensor(line):
+    tensor = torch.zeros(len(line), 1, n_letters)
+    for li, letter in enumerate(line):
+        tensor[li][0][letterToIndex(letter)] = 1
+    return tensor
+test_name = name
+tensorised = lineToTensor(test_name)
+print(tensorised.flatten().shape)
+# shape = [58,32]
+# b = torch.randn(shape)
+# print(b.shape)
+# # print (f"The letter 'a' becomes {lineToTensor('a')}") 
+# # print (f"The name {test_name} becomes {tensorised}") 
+# print(tensorised.shape)
+# answer = tensorised @ b
+# print(answer.shape)
+torch.concat

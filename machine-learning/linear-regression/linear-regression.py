@@ -46,16 +46,6 @@ class LinearRegressionGD:
                 mse = self.calculate_mse(y_train, y_predicted)
                 print(f"Epoch {epoch}, MSE: {mse}, w: {self.w}, b: {self.b}, LR: {learning_rate}")
 
-                # # Adaptive Learning Rate Logic:
-                # if mse >= previous_mse:
-                #     learning_rate *= 0.5
-                #     print(f"Learning rate reduced to: {learning_rate}")
-
-                # previous_mse = mse
-                # if learning_rate < 1e-9:
-                #     print("Learning rate too small, stopping training.")
-        #         #     break
-        # self.learning_rate = learning_rate
 
     def fit(self, X_train, y_train):
         self.train_linear_regression(X_train, y_train)
